@@ -1,0 +1,87 @@
+{
+  "timestamp": "2025-12-15 15:17:12.197083",
+  "systeme": {
+    "os": "Darwin",
+    "version": "Darwin Kernel Version 25.1.0: Mon Oct 20 19:34:03 PDT 2025; root:xnu-12377.41.6~2/RELEASE_ARM64_T8112",
+    "architecture": "arm64",
+    "hostname": "MacBook-Air-de-Maxime.local"
+  },
+  "cpu": {
+    "coeurs_physiques": 8,
+    "coeurs_logiques": 8,
+    "utilisation": 15.3
+  },
+  "memoire": {
+    "total": 8589934592,
+    "disponible": 1960378368,
+    "pourcentage": 77.2
+  },
+  "disques": [
+    {
+      "point_montage": "/",
+      "total": 245107195904,
+      "utilise": 12189122560,
+      "pourcentage": 23.3
+    },
+    {
+      "point_montage": "/System/Volumes/VM",
+      "total": 245107195904,
+      "utilise": 2147532800,
+      "pourcentage": 5.1
+    },
+    {
+      "point_montage": "/System/Volumes/Preboot",
+      "total": 245107195904,
+      "utilise": 8140357632,
+      "pourcentage": 16.9
+    },
+    {
+      "point_montage": "/System/Volumes/Update",
+      "total": 245107195904,
+      "utilise": 57237504,
+      "pourcentage": 0.1
+    },
+    {
+      "point_montage": "/System/Volumes/xarts",
+      "total": 524288000,
+      "utilise": 6311936,
+      "pourcentage": 1.2
+    },
+    {
+      "point_montage": "/System/Volumes/iSCPreboot",
+      "total": 524288000,
+      "utilise": 6041600,
+      "pourcentage": 1.2
+    },
+    {
+      "point_montage": "/System/Volumes/Hardware",
+      "total": 524288000,
+      "utilise": 897024,
+      "pourcentage": 0.2
+    },
+    {
+      "point_montage": "/System/Volumes/Data",
+      "total": 245107195904,
+      "utilise": 181044154368,
+      "pourcentage": 81.8
+    },
+    {
+      "point_montage": "/Library/Developer/CoreSimulator/Cryptex/Images/bundle/SimRuntimeBundle-E4790698-CFCA-46E4-A363-36E349E92A62",
+      "total": 8843689984,
+      "utilise": 8558989312,
+      "pourcentage": 97.1
+    },
+    {
+      "point_montage": "/Library/Developer/CoreSimulator/Volumes/iOS_22B81",
+      "total": 19465764864,
+      "utilise": 18926845952,
+      "pourcentage": 97.5
+    },
+    {
+      "point_montage": "/private/var/folders/t8/k5nh30ns2vg_1sywy7p3xb300000gn/T/AppTranslocation/F89B8B06-FA71-42AE-8199-FF7BDF5EDBC4",
+      "total": 245107195904,
+      "utilise": 179884257280,
+      "pourcentage": 80.5
+    }
+  ]
+}

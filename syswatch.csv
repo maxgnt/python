@@ -1,0 +1,4 @@
+timestamp,hostname,cpu_percent,mem_total_gb,mem_dispo_gb,mem_percent
+2025-12-15 14:58:34.744441,MacBook-Air-de-Maxime.local,2.0,8.0,1.91,76.1
+2025-12-15 15:15:01.498085,MacBook-Air-de-Maxime.local,4.1,8.0,1.99,75.2
+2025-12-15 15:17:12.197083,MacBook-Air-de-Maxime.local,15.3,8.0,1.83,77.2
