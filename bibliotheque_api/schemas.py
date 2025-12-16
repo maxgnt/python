@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from datetime import datetime
 
 class BookCreate(BaseModel):
     title: str
@@ -18,3 +18,14 @@ class AuthorCreate(BaseModel):
 
 class Author(AuthorCreate):
     id: int
+
+class LoanCreate (BaseModel):
+    book_id: int
+    borrower_name: str
+    borrower_email: str
+
+class Loan (LoanCreate):
+    id: int
+    loan_date: datetime
+    return_date: datetime | None
+    status: str

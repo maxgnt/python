@@ -3,6 +3,8 @@ from database import get_connection
 from models import init_db
 from schemas import BookCreate, Book
 from schemas import AuthorCreate, Author
+from schemas import LoanCreate, Loan
+from datetime import datetime
 
 app = FastAPI(title="API Bibliothèque")
 
@@ -91,3 +93,83 @@ def list_authors():
             }
             for row in rows
         ]
+
+@app.post("/loans", returns_model=Loan)
+def create_loan (loan: LoanCreate): 
+    with get_connection() as conn: 
+        book = conn.execcute ("SELECT available_copies FROM books WHERE id = ?", (loan.book_id,)).fetchone()
+
+        if not book : 
+            raise HTTPException (status_code=404, detail="Livre non trouvé")
+
+        if book [0] <=0: 
+            raise HTTPException(status_code=400, detail="Indisponible pour le moment")
+
+    count = conn.execute("""
+    SELECT COUNT(*) FROM loans 
+    WHERE borrower_email = ? AND status = 'active'
+    """, (loan.borrower_email,)).fetchone()[0]
+
+    if count >=3: 
+    raise HTTPException(status_code=400, detail="Limite de 3 emprunts atteinte")
+
+    cursor = conn.execute ("""
+    INSERT INTO loans (
+    book_id, borrower_name, borrower_email, 
+    loan_date, status
+    )
+    VALUES (?,?,?,?, 'active')
+    """,
+    (
+        loan.book_id,
+        loan.borrower_name,
+        loan.borrower_email,
+        datetime.utcnow().isoformat()
+    )
+    )
+
+conn.execute ("""
+
+UPDATE books
+SET available_copies = available_copies -1
+WHERE id = ?
+""", (loan.book_id,))
+loan_id = cursor.lastrowid
+
+return {
+    "id": loan_id,
+    **loan.dict(),
+    loan_date = datetime.now(),
+    "return_date": None,
+    "status": "active"
+}
+
+@app.post("/loans/{loan_id}/return")
+def return_loan(loan_id: int):
+    with get_connection() as conn:
+        loan = conn.execute("""
+            SELECT book_id, status FROM loans WHERE id = ?
+        """, (loan_id,)).fetchone()
+
+        if not loan:
+            raise HTTPException(status_code=404, detail="Emprunt introuvable")
+
+        if loan[1] != "active":
+            raise HTTPException(status_code=400, detail="Emprunt déjà retourné")
+
+        conn.execute("""
+            UPDATE loans
+            SET status = 'returned',
+                return_date = ?
+            WHERE id = ?
+        """, (datetime.now().isoformat(), loan_id))
+
+    
+        conn.execute("""
+            UPDATE books
+            SET available_copies = available_copies + 1
+            WHERE id = ?
+        """, (loan[0],))
+
+    return {"message": "Livre retourné avec succès"}
+
