@@ -13,3 +13,12 @@ def init_db():
                 available_copies INTEGER NOT NULL
             )
         """)
+def init_authors():
+    with get_connection() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS authors (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                first_name TEXT NOT NULL,
+                last_name TEXT NOT NULL
+            )
+        """)

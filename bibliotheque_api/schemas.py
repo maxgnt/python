@@ -11,3 +11,10 @@ class BookCreate(BaseModel):
 
 class Book(BookCreate):
     id: int
+
+class AuthorCreate(BaseModel):
+    first_name: str
+    last_name: str
+
+class Author(AuthorCreate):
+    id: int
