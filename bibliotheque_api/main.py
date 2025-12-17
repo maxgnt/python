@@ -46,7 +46,7 @@ def create_book(book: BookCreate):
     return {**book.dict(), "id": book_id}
 
 
-@app.get("/books/{book_id}", response_model=Book, tags=["Books"])
+@app.get("/books/{book_id}", response_model=Book, tags=["Livres"])
 def get_book(book_id: int):
     with get_connection() as conn:
         row = conn.execute("""
@@ -77,7 +77,7 @@ def create_author(author: AuthorCreate):
         author_id = cursor.lastrowid
         return {**author.dict(), "id": author_id}
 
-@app.get("/authors/{author_id}", response_model=Author, tags=["Authors"])
+@app.get("/authors/{author_id}", response_model=Author, tags=["Auteurs"])
 def get_author(author_id: int):
     with get_connection() as conn:
         row = conn.execute("""
@@ -114,10 +114,10 @@ def create_loan(loan: LoanCreate):
             WHERE borrower_email = ? AND status = 'active'
         """, (loan.borrower_email,)).fetchone()[0]
 
-        if count >= 3:
+        if count >= 5:
             raise HTTPException(
                 status_code=400,
-                detail="Limite de 3 emprunts atteinte"
+                detail="Limite de 5 emprunts atteinte"
             )
 
         cursor = conn.execute("""
@@ -181,7 +181,7 @@ def return_loan(loan_id: int):
     return {"message": "Livre retourné avec succès"}
     
 
-@app.get("/loans", response_model=list[Loan], tags=["Loans"])
+@app.get("/loans", response_model=list[Loan], tags=["Emprunts"])
 def list_loans():
     with get_connection() as conn:
         rows = conn.execute("""
