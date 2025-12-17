@@ -13,6 +13,18 @@ def init_db():
                 available_copies INTEGER NOT NULL
             )
         """)
+        conn.execute("""
+        CREATE TABLE IF NOT EXISTS loans (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        book_id INTEGER NOT NULL,
+        borrower_name TEXT NOT NULL,
+        borrower_email TEXT NOT NULL,
+        loan_date TEXT NOT NULL,
+        return_date TEXT,
+        status TEXT NOT NULL
+        )
+        """) 
+
 def init_authors():
     with get_connection() as conn:
         conn.execute("""
