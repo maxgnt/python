@@ -179,3 +179,24 @@ def return_loan(loan_id: int):
 
     return {"message": "Livre retourné avec succès"}
 
+@app.get("/loans", response_model=list[Loan], tags=["Loans"])
+def list_loans():
+    with get_connection() as conn:
+        rows = conn.execute("""
+            SELECT id, book_id, borrower_name, borrower_email,
+                   loan_date, return_date, status
+            FROM loans
+        """).fetchall()
+
+    return [
+        {
+            "id": row[0],
+            "book_id": row[1],
+            "borrower_name": row[2],
+            "borrower_email": row[3],
+            "loan_date": row[4],
+            "return_date": row[5],
+            "status": row[6]
+        }
+        for row in rows
+    ]
