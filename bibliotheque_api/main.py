@@ -19,7 +19,7 @@ def root():
     return {"message": "API Bibliothèque opérationnelle"}
 
 
-@app.post("/books", response_model=Book)
+@app.post("/books", response_model=Book, tags=["Livres"])
 def create_book(book: BookCreate):
     if book.available_copies > book.total_copies:
         raise HTTPException(
@@ -46,7 +46,7 @@ def create_book(book: BookCreate):
     return {**book.dict(), "id": book_id}
 
 
-@app.get("/books", response_model=list[Book])
+@app.get("/books", response_model=list[Book], tags=["Livres"])
 def list_books():
     with get_connection() as conn:
         cursor = conn.execute("""
@@ -67,7 +67,7 @@ def list_books():
         for row in rows
     ]
 
-@app.post("/authors", response_model=Author)
+@app.post("/authors", response_model=Author, tags=["Auteurs"])
 def create_author(author: AuthorCreate):
     with get_connection() as conn: 
         cursor = conn.execute ("""
@@ -77,7 +77,7 @@ def create_author(author: AuthorCreate):
         author_id = cursor.lastrowid
         return {**author.dict(), "id": author_id}
 
-@app.get("/authors", response_model=list[Author])
+@app.get("/authors", response_model=list[Author], tags=["Auteurs"])
 def list_authors(): 
     with get_connection() as conn: 
         cursor = conn.execute ("""
@@ -94,7 +94,7 @@ def list_authors():
             for row in rows
         ]
 
-@app.post("/loans", response_model=Loan)
+@app.post("/loans", response_model=Loan, tags=["Emprunts"])
 def create_loan(loan: LoanCreate):
     with get_connection() as conn:
         book = conn.execute(
@@ -150,7 +150,7 @@ def create_loan(loan: LoanCreate):
 
 
 
-@app.post("/loans/{loan_id}/return")
+@app.post("/loans/{loan_id}/return", tags=["Emprunts"])
 def return_loan(loan_id: int):
     with get_connection() as conn:
         loan = conn.execute("""
