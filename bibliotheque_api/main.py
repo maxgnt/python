@@ -46,26 +46,26 @@ def create_book(book: BookCreate):
     return {**book.dict(), "id": book_id}
 
 
-@app.get("/books", response_model=list[Book], tags=["Livres"])
-def list_books():
+@app.get("/books/{book_id}", response_model=Book, tags=["Books"])
+def get_book(book_id: int):
     with get_connection() as conn:
-        cursor = conn.execute("""
+        row = conn.execute("""
             SELECT id, title, isbn, year, total_copies, available_copies
-            FROM books
-        """)
-        rows = cursor.fetchall()
+            FROM books WHERE id = ?
+        """, (book_id,)).fetchone()
 
-    return [
-        {
-            "id": row[0],
-            "title": row[1],
-            "isbn": row[2],
-            "year": row[3],
-            "total_copies": row[4],
-            "available_copies": row[5]
-        }
-        for row in rows
-    ]
+    if not row:
+        raise HTTPException(status_code=404, detail="Livre introuvable")
+
+    return {
+        "id": row[0],
+        "title": row[1],
+        "isbn": row[2],
+        "year": row[3],
+        "total_copies": row[4],
+        "available_copies": row[5]
+    }
+
 
 @app.post("/authors", response_model=Author, tags=["Auteurs"])
 def create_author(author: AuthorCreate):
@@ -77,22 +77,23 @@ def create_author(author: AuthorCreate):
         author_id = cursor.lastrowid
         return {**author.dict(), "id": author_id}
 
-@app.get("/authors", response_model=list[Author], tags=["Auteurs"])
-def list_authors(): 
-    with get_connection() as conn: 
-        cursor = conn.execute ("""
-        SELECT id, first_name, last_name FROM authors
-        """)
-        rows = cursosr.fetchall()
+@app.get("/authors/{author_id}", response_model=Author, tags=["Authors"])
+def get_author(author_id: int):
+    with get_connection() as conn:
+        row = conn.execute("""
+            SELECT id, first_name, last_name
+            FROM authors WHERE id = ?
+        """, (author_id,)).fetchone()
 
-        return [
-            {
-                "id":row[0],
-                "first_name": row[1],
-                "last_name": row[2]
-            }
-            for row in rows
-        ]
+    if not row:
+        raise HTTPException(status_code=404, detail="Auteur introuvable")
+
+    return {
+        "id": row[0],
+        "first_name": row[1],
+        "last_name": row[2]
+    }
+
 
 @app.post("/loans", response_model=Loan, tags=["Emprunts"])
 def create_loan(loan: LoanCreate):
@@ -178,6 +179,7 @@ def return_loan(loan_id: int):
         """, (loan[0],))
 
     return {"message": "Livre retourné avec succès"}
+    
 
 @app.get("/loans", response_model=list[Loan], tags=["Loans"])
 def list_loans():
