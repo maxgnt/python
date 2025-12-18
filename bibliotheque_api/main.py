@@ -202,3 +202,28 @@ def list_loans():
         }
         for row in rows
     ]
+
+@app.delete("/books/{book_id}", tags=["Livres"])
+def delete_book(book_id: int):
+    with get_connection() as conn: 
+        active_loan = conn.execute("""
+        SELECT 1 FROM loans
+        WHERE book_id = ? AND status = 'active'
+        """, (book_id,)).fetchone()
+    
+    if active_loan: 
+        raise HTTPException(
+            status_code=400, 
+            detail= "Impossible de supprimer un lvre avec des emprunts actifs"
+        )
+
+    cursor = conn.execute("""
+    DELETE FROM books WHERE id = ? 
+    """, (book_id,))
+
+    if cursor.rowcount == 0: 
+        raise HTTPException(
+            status_code=404, 
+            detail="Livre introuvable"
+        )
+    return {"message": "Livre supprimé"}
